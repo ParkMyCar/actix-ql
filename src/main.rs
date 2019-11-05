@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate diesel;
+
 use std::io;
 use std::sync::Arc;
 
@@ -7,6 +10,7 @@ use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 
 mod graphql_schema;
+mod schema;
 
 use crate::graphql_schema::{create_schema, Schema};
 
@@ -17,7 +21,8 @@ fn main() -> io::Result<()> {
             .data(schema.clone())
             .service(web::resource("/graphql").route(web::post().to_async(graphql)))
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
-    }).bind("127.0.0.1:8080")?
+    })
+    .bind("127.0.0.1:8080")?
     .run()
 }
 
